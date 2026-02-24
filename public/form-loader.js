@@ -7,6 +7,9 @@ form.addEventListener("submit", async (e) => {
 
   await fetch(targetURL, {
     method: "POST",
-    body: JSON.stringify(formData)
+    body: JSON.stringify(formData),
+    headers: { 
+      "Content-Type": "application/json"
+    }
   });
 });
