@@ -16,9 +16,11 @@ exports.handler = async (event) => {
   
   try {
     const data = JSON.parse(event.body);
+    console.log("Received data:", data);
     
     // Parse the JSON config from your Env Var
     const projectMap = JSON.parse(process.env.PROJECT_CONFIG || "{}");
+    console.log("parsed project confif:", projectMap);
     const config = projectMap[data.project_key];
 
     if (!config) throw new Error("Invalid Project Key");
