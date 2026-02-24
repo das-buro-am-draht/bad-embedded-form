@@ -15,7 +15,19 @@ exports.handler = async (event) => {
   if (event.httpMethod === "OPTIONS") return { statusCode: 200, headers };
   
   try {
-    const data = JSON.parse(event.body);
+    let data;
+  
+    const contentType = event.headers['content-type'] || '';
+
+    if (contentType.includes('application/x-www-form-urlencoded')) {
+      // Convert "name=John&email=test" into { name: "John", email: "test" }
+      const params = new URLSearchParams(event.body);
+      data = Object.fromEntries(params.entries());
+    } else {
+      // Fallback to JSON
+      data = JSON.parse(event.body);
+    }
+
     console.log("Received data:", data);
     
     // Parse the JSON config from your Env Var
