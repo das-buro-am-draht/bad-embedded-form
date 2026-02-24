@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const formData = Object.fromEntries(new FormData(form));
 
       try {
-        const response = await fetch("https://your-app.netlify.app/.netlify/functions/submit", {
+        const response = await fetch("https://bad-embedded-form.netlify.app/.netlify/functions/submit", {
           method: "POST",
           body: JSON.stringify(formData),
           headers: { "Content-Type": "application/json" }
