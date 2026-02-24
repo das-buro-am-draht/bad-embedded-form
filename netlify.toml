@@ -1,0 +1,14 @@
+[build]
+  # 'public' is where your form-loader.js lives
+  publish = "public"
+
+[functions]
+  # Netlify looks here for your backend logic
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
+[[headers]]
+  # Allow any website to load your form-loader.js and call your API
+  for = "/*"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
