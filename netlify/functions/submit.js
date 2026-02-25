@@ -46,9 +46,12 @@ exports.handler = async (event) => {
     if (!turnstile.data.success) throw new Error("Captcha failed");
 
     // 2. GOOGLE SHEETS
+    const base64Key = process.env.GOOGLE_PRIVATE_KEY;
+    const decodedKey = Buffer.from(base64Key, 'base64').toString('utf-8');
+    const finalKey = decodedKey.replace(/\\n/g, '\n');
     const auth = new JWT({
       email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
-      key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+      key: finalKey,
       scopes: ['https://www.googleapis.com/auth/spreadsheets'],
     });
 
