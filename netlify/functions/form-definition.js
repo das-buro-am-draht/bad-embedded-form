@@ -56,19 +56,23 @@ exports.handler = async (event) => {
 
         const fields = rows.map(row => {
             const field = {
-                name: row.get('Name'),
-                type: row.get('Type') || 'text',
-                label: row.get('Label') || row.get('Name'),
-                required: (row.get('Required') || '').toLowerCase() === 'true',
+                Name: row.get('Name'),
+                Type: row.get('Type') || 'text',
+                Label: row.get('Label') || row.get('Name'),
+                Mandatory: (row.get('Mandatory') || '').toLowerCase() === 'true',
             };
 
             // Optional: placeholder text
             const placeholder = row.get('Placeholder');
-            if (placeholder) field.placeholder = placeholder;
+            if (placeholder) field.Placeholder = placeholder;
 
             // Optional: comma-separated options for select/radio/checkbox
             const options = row.get('Options');
-            if (options) field.options = options.split(',').map(o => o.trim());
+            if (options) field.Options = options.split(',').map(o => o.trim());
+
+            // Optional: action
+            const action = row.get('Action');
+            if (action) field.Action = action;
 
             return field;
         });
