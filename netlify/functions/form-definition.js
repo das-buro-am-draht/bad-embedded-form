@@ -56,7 +56,7 @@ exports.handler = async (event) => {
 
         const fields = rows.map(row => {
             const field = {
-                Name: row.get('Name'),
+                Field: row.get('Field'),
                 Type: row.get('Type') || 'text',
                 Label: row.get('Label') || row.get('Name'),
                 Mandatory: (row.get('Mandatory') || '').toLowerCase() === 'true' ? "x" : "",
