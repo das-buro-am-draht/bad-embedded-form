@@ -34,7 +34,7 @@ exports.handler = async (event) => {
       const params = new URLSearchParams(event.body);
       data = Object.fromEntries(params.entries());
     } else {
-      data = JSON.parse(event.body);
+      data = JSON.parse(event.body).data;
     }
 
     console.log("Received data:", data);
