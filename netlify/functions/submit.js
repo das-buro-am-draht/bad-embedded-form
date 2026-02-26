@@ -57,30 +57,36 @@ exports.handler = async (event) => {
     const doc = new GoogleSpreadsheet(config.sheetId, auth);
     await doc.loadInfo();
 
-    // Read field names from FormDefinition tab
+    // Read field definitions from FormDefinition tab
     const defSheet = doc.sheetsByTitle['FormDefinition'] || doc.sheetsByIndex[1];
     const defRows = defSheet ? await defSheet.getRows() : [];
-    const fieldNames = defRows.map(row => row.get('Field')).filter(Boolean);
-    const fieldTypes = defRows.map(row => row.get('Type')).filter(Boolean);
-    const fieldLabels = defRows.map(row => row.get('Label')).filter(Boolean);
+    const TECHNICAL_TYPES = ['captcha', 'hidden', 'submit'];
+    const allFields = defRows
+      .map(row => ({
+        name: row.get('Field'),
+        type: (row.get('Type') || 'text').toLowerCase(),
+        label: row.get('Label') || row.get('Field'),
+      }))
+      .filter(f => f.name);
 
-    // Build a row object dynamically: Date + all defined fields
+    // Only user-facing fields (exclude captcha, hidden, submit)
+    const userFields = allFields.filter(f => !TECHNICAL_TYPES.includes(f.type));
+
+    // Build a row object dynamically: Date + user-facing fields
     const rowData = { Date: new Date().toLocaleString('de-DE') };
-    for (const name of fieldLabels) {
-      if (fieldTypes[name] !== 'captcha' && fieldTypes[name] !== 'hidden' && fieldTypes[name] !== 'submit') {
-        rowData[name] = data[name] || "";
-      }
+    for (const f of userFields) {
+      rowData[f.label] = data[f.name] || "";
     }
 
     await doc.sheetsByIndex[0].addRow(rowData);
 
-    // 3. EMAIL — build body from all submitted fields
+    // 3. EMAIL — only include user-facing fields
     const emailSubject = data.name
       ? `New Lead: ${data.name}`
       : `New form submission (${data.project_key})`;
 
-    const emailHtml = fieldNames
-      .map(name => `<p><strong>${name}:</strong> ${data[name] || ""}</p>`)
+    const emailHtml = userFields
+      .map(f => `<p><strong>${f.label}:</strong> ${data[f.name] || ""}</p>`)
       .join('');
 
     await resend.emails.send({
