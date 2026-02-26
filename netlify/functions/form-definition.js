@@ -74,6 +74,11 @@ exports.handler = async (event) => {
             const value = row.get('Value');
             if (value) field.Value = value;
 
+            // Optional: extra
+            const extra = row.get('Extra');
+            if (extra) field.Extra = extra;
+
+
             // Optional: action
             const action = row.get('Action');
             if (action) field.Action = action;
