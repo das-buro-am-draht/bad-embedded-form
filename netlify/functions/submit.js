@@ -60,7 +60,7 @@ exports.handler = async (event) => {
     // Read field names from FormDefinition tab
     const defSheet = doc.sheetsByTitle['FormDefinition'] || doc.sheetsByIndex[1];
     const defRows = defSheet ? await defSheet.getRows() : [];
-    const fieldNames = defRows.map(row => row.get('Name')).filter(Boolean);
+    const fieldNames = defRows.map(row => row.get('Field')).filter(Boolean);
 
     // Build a row object dynamically: Date + all defined fields
     const rowData = { Date: new Date().toISOString() };
