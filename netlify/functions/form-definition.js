@@ -70,9 +70,9 @@ exports.handler = async (event) => {
             const options = row.get('Options');
             if (options) field.Options = options.split(',').map(o => o.trim());
 
-            // Optional: extra
-            const extra = row.get('Extra');
-            if (extra) field.Extra = extra;
+            // Optional: value
+            const value = row.get('Value');
+            if (value) field.Value = value;
 
             // Optional: action
             const action = row.get('Action');
