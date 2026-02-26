@@ -59,7 +59,7 @@ exports.handler = async (event) => {
                 Name: row.get('Name'),
                 Type: row.get('Type') || 'text',
                 Label: row.get('Label') || row.get('Name'),
-                Mandatory: (row.get('Mandatory') || '').toLowerCase() === 'true',
+                Mandatory: (row.get('Mandatory') || '').toLowerCase() === 'true' ? "x" : "",
             };
 
             // Optional: placeholder text
@@ -69,6 +69,10 @@ exports.handler = async (event) => {
             // Optional: comma-separated options for select/radio/checkbox
             const options = row.get('Options');
             if (options) field.Options = options.split(',').map(o => o.trim());
+
+            // Optional: extra
+            const extra = row.get('Extra');
+            if (extra) field.Extra = extra;
 
             // Optional: action
             const action = row.get('Action');
