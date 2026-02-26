@@ -61,11 +61,15 @@ exports.handler = async (event) => {
     const defSheet = doc.sheetsByTitle['FormDefinition'] || doc.sheetsByIndex[1];
     const defRows = defSheet ? await defSheet.getRows() : [];
     const fieldNames = defRows.map(row => row.get('Field')).filter(Boolean);
+    const fieldTypes = defRows.map(row => row.get('Type')).filter(Boolean);
+    const fieldLabels = defRows.map(row => row.get('Label')).filter(Boolean);
 
     // Build a row object dynamically: Date + all defined fields
-    const rowData = { Date: new Date().toISOString() };
-    for (const name of fieldNames) {
-      rowData[name] = data[name] || "";
+    const rowData = { Date: new Date().toLocaleString('de-DE') };
+    for (const name of fieldLabels) {
+      if (fieldTypes[name] !== 'captcha' && fieldTypes[name] !== 'hidden' && fieldTypes[name] !== 'submit') {
+        rowData[name] = data[name] || "";
+      }
     }
 
     await doc.sheetsByIndex[0].addRow(rowData);
